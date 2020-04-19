@@ -4,7 +4,7 @@ services:
   -docker
 
 before_install:
-   - docker build -t pIuszak/frontend -f Dockerfile.dev .
+   - docker build -t pIuszak/devops/frontend -f Dockerfile.dev .
 
 script:
-  - docker run -e CI=true pIuszak/frontend yarn test
+  - docker run -e CI=true pIuszak/devops/frontend yarn test
