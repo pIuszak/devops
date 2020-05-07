@@ -1,0 +1,8 @@
+version: '3'
+services:
+    my-redis:
+        image: 'redis'
+    my-backend:
+        build: .
+        ports: 
+            - '8080:8080'
