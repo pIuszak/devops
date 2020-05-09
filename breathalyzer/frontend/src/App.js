@@ -16,6 +16,7 @@ class App extends Component
 
     async handleClickCache ()
     {
+        console.log("-----------handleClickCache-------------");
         var xd = 1;
         await axios.get(`/api/${xd}`).then(response =>
         {

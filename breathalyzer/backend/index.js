@@ -33,6 +33,9 @@ const redisClient = redis.createClient({
     retry_strategy: () => 1000
 });
 
+redisClient.set(0, parseInt(0));
+redisClient.set(1, parseInt(1));
+
 const port = 5000;
 app.listen(port, err => {
     console.log(`Listening on port ${port}`);
@@ -65,17 +68,24 @@ function bac(beer, shot, wine, weight, time) {
 }
 
 app.get('/:beer/:shot/:wine/:weight/:time', (req, res) => {
+    // add to db
+
     var beer = parseInt(req.params.beer);
     var shot = parseInt(req.params.shot);
     var wine = parseInt(req.params.wine);
     var weight = parseInt(req.params.weight);
     var time = parseInt(req.params.time);
     var ret = (bac(beer, shot, wine, weight, time));
+
+    // add to db re
     res.send(`${ret} ‰`);
 });
 app.get('/:status/', async (req, res) => {
-    const result = await pgClient.query('SELECT * FROM values');
-    res.send({gcd: result.rows})
+    const result = await pgClient.query('CREATE TABLE IF NOT EXISTS values (number INT)');
+    const result2 = await pgClient.query('SELECT * FROM values');
+    //const result = await pgClient.query('SELECT * FROM values');
+    //res.send({gcd: result.rows});
+    res.send("{gcd: result.rows})");
 });
 
 app.get('/droptable/', (req, res) => {
