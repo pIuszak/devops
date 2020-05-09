@@ -16,13 +16,11 @@ class App extends Component
 
     async handleClickCache ()
     {
-        console.log("-----------handleClickCache-------------");
         var xd = 1;
         await axios.get(`/api/${xd}`).then(response =>
         {
-            console.log(response);
-            console.log("-----------response-------------");
-            //document.getElementById("result").value = response.data.toString();
+            console.log(response.data);
+           // document.getElementById("result").value = response.data.toString();
 
         })
     }
@@ -58,12 +56,15 @@ class App extends Component
                     <input type="text" id="weight" placeholder="Ile ważysz..."></input>
                     <input type="text" id="time" placeholder="Ile godzin temu przestałeś pić.."></input>
                     <div>
-                        <button onClick={this.handleClickHello}> BAC </button>
-                        <button onClick={this.handleClickCache}> CACHE </button>
-                        <p>Szacowany poziom alkocholu we krwi :</p>
+                        <button onClick={this.handleClickHello}> ILE MAM PROMILI  </button>
+
+                        <p>Szacowany poziom alkoholu we krwi :</p>
 
                     </div>
                     <input type="text" id="result" placeholder="wynik"></input>
+                    <p>Developer mode (open console):</p>
+                    <button onClick={this.handleClickCache}> SHOW CACHE </button>
+
                 </header>
             </div>
         );

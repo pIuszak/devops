@@ -33,9 +33,6 @@ const redisClient = redis.createClient({
     retry_strategy: () => 1000
 });
 
-redisClient.set(0, parseInt(0));
-redisClient.set(1, parseInt(1));
-
 const port = 5000;
 app.listen(port, err => {
     console.log(`Listening on port ${port}`);
@@ -67,7 +64,7 @@ function bac(beer, shot, wine, weight, time) {
     return result;
 }
 
-app.get('/:beer/:shot/:wine/:weight/:time', (req, res) => {
+app.get('/:beer/:shot/:wine/:weight/:time', async (req, res) => {
     // add to db
 
     var beer = parseInt(req.params.beer);
@@ -77,15 +74,20 @@ app.get('/:beer/:shot/:wine/:weight/:time', (req, res) => {
     var time = parseInt(req.params.time);
     var ret = (bac(beer, shot, wine, weight, time));
 
+    await pgClient.query(`INSERT INTO cache VALUES (${ret})`);
+
     // add to db re
     res.send(`${ret} ‰`);
 });
+
+
 app.get('/:status/', async (req, res) => {
-    const result = await pgClient.query('CREATE TABLE IF NOT EXISTS values (number INT)');
-    const result2 = await pgClient.query('SELECT * FROM values');
+
+    const result = await pgClient.query('CREATE TABLE IF NOT EXISTS cache (number FLOAT)');
+    const result2 = await pgClient.query('SELECT * FROM cache');
     //const result = await pgClient.query('SELECT * FROM values');
     //res.send({gcd: result.rows});
-    res.send("{gcd: result.rows})");
+    res.send({gcd: result2.rows});
 });
 
 app.get('/droptable/', (req, res) => {
