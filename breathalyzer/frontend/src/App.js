@@ -1,34 +1,73 @@
-import React from 'react';
+import React, { Component } from 'react';
+import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
-import axios from 'axios'
 
-function App() {
-    const handleClick = async () => {
-      const  helloResponce = await axios.get('/api/');
-      console.log(helloResponce);
-    };
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit to reload -> XD )
-        </p>
-          <div>
-              <button onClick={handleClick}> Send Request to backend</button>
-          </div>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React[
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component
+{
+    constructor()
+    {
+        super()
+        this.handleClickHello = this.handleClickHello.bind(this)
+        this.handleClickCache = this.handleClickCache.bind(this)
+    }
+
+    async
+
+    async handleClickCache ()
+    {
+        var xd = 1;
+        await axios.get(`/api/${xd}`).then(response =>
+        {
+            console.log(response);
+            console.log("-----------response-------------");
+            //document.getElementById("result").value = response.data.toString();
+
+        })
+    }
+
+    async handleClickHello ()
+    {
+        var beer = document.getElementById("beer").value;
+        var shot = document.getElementById("shot").value;
+        var wine = document.getElementById("wine").value;
+        var weight = document.getElementById("weight").value;
+        var time = document.getElementById("time").value;
+
+        await axios.get(`/api/${beer}/${shot}/${wine}/${weight}/${time}`).then(response =>
+        {
+            console.log(response);
+            document.getElementById("result").value = response.data.toString();
+
+        })
+    }
+
+    render() {
+
+        return (
+            <div className="App">
+                <header className="App-header">
+                    <p>Breathalyzer by pluszak</p>
+
+                    <img src={logo} className="App-logo" alt="logo" />
+
+                    <input type="text" id="beer" placeholder="Ile piw wypiłeś..."></input>
+                    <input type="text" id="shot" placeholder="Ile szotów wypiłeś..."></input>
+                    <input type="text" id="wine" placeholder="Ile kieliszków wina wypiłeś..."></input>
+                    <input type="text" id="weight" placeholder="Ile ważysz..."></input>
+                    <input type="text" id="time" placeholder="Ile godzin temu przestałeś pić.."></input>
+                    <div>
+                        <button onClick={this.handleClickHello}> BAC </button>
+                        <button onClick={this.handleClickCache}> CACHE </button>
+                        <p>Szacowany poziom alkocholu we krwi :</p>
+
+                    </div>
+                    <input type="text" id="result" placeholder="wynik"></input>
+                </header>
+            </div>
+        );
+    }
 }
 
 export default App;
+
