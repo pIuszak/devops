@@ -28,7 +28,7 @@ services:
       - PGPASSWORD=${PGPASSWORD}
       - PGPORT=${PGPORT}
     ports:
-      - "6000:6000"
+      - "5000:5000"
     depends_on:
       - my-postgres-server
       - my-redis-server

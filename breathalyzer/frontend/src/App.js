@@ -5,7 +5,7 @@ import axios from 'axios'
 
 function App() {
     const handleClick = async () => {
-      const  helloResponce = await axios.getUri('/api/');
+      const  helloResponce = await axios.get('/api/');
       console.log(helloResponce);
     };
   return (
@@ -24,7 +24,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          Learn React[
         </a>
       </header>
     </div>

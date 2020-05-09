@@ -33,12 +33,14 @@ const redisClient = redis.createClient({
     retry_strategy: () => 1000
 });
 
-
-app.listen(8080, err => {
-  console.log("Listening on port 8080");
+const port = 5000;
+app.listen(port, err => {
+  console.log(`Listening on port ${port}`);
 });
 
-app.get('/', (req, resp) => {
-        resp.send('Hello from Backend!');
+
+
+app.get('/', (req, res) => {
+        res.send('Hello from Backend!');
 });
 

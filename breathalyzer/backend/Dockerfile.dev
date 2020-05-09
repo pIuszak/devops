@@ -1,6 +1,6 @@
 FROM node:alpine
 
-WORKDIR /opt/mywebapp
+WORKDIR /opt/app
 COPY ./package.json .
 RUN yarn install
 COPY . .
