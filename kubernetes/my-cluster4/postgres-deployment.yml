@@ -1,0 +1,51 @@
+apiVersion: v1
+
+kind: Deployment
+
+metadata:
+  name: postgres-deployment
+  labels:
+    app: my-postgres
+    type: db
+
+
+spec:
+  template:
+    metadata:
+      name: postgres-pod
+      labels:
+        app:my-postgres
+      type: db
+
+    spec:
+      volumes:
+        - name: postgresvolume
+        persistentVolumeClaim:
+          claimName: posgres-pvc
+
+      containers:
+        - name: my-postgres-container
+        image: postgres
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data/pgdata
+            subPath: postgres
+            name: postgresvolume
+      env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+            name: posgres-secret
+              key: PGPASSWORD
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: myapp-config
+              key: PGUSER
+
+  #tu musi być 1, zwiększanie tego nie duplikuje bd
+  replicas: 1
+  selector:
+    matchLabels:
+      type: db
+      app: my-postgres
+

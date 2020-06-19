@@ -1,0 +1,10 @@
+FROM node:slim as builder
+
+WORKDIR /opt/app
+COPY ./frontend/package.json .
+RUN yarn install
+COPY ./frontend .
+RUN yarn build
+
+FROM nginx
+COPY --from=builder /opt/app/build /usr/share/nginx/html

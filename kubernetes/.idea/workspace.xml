@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="82a45e89-36d2-4fd1-b53c-f856dab08490" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/kubernetes.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ingress/example-ingress.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/my-cluster3/myapp-configMap.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/my-cluster3/postgres-deployment.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/my-cluster3/postgres-pvc.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/my-cluster3/postgres-secret.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/my-cluster3/pvc-deployment.yml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1cLMNHJ8cbKhTcY8rmDHIT3mh8u" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/my-cluster3" />
+    <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/my-cluster3" />
+      <recent name="$PROJECT_DIR$/my-cluster2/mybackend" />
+      <recent name="$PROJECT_DIR$/my-cluster2" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/sandbox" />
+      <recent name="$PROJECT_DIR$/my-cluster2" />
+      <recent name="$PROJECT_DIR$/my-cluster2/mybackend" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="82a45e89-36d2-4fd1-b53c-f856dab08490" name="Default Changelist" comment="" />
+      <created>1590303378493</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1590303378493</updated>
+      <workItem from="1590303379913" duration="7212000" />
+      <workItem from="1591514771098" duration="6417000" />
+      <workItem from="1592475971004" duration="7808000" />
+      <workItem from="1592555702130" duration="4828000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="986" y="208" width="670" height="676" key="search.everywhere.popup" timestamp="1592561148974">
+      <screen x="0" y="23" width="1920" height="990" />
+    </state>
+    <state x="986" y="208" width="670" height="676" key="search.everywhere.popup/0.23.1920.990/-1680.23.1680.1027/1920.23.1920.1057@0.23.1920.990" timestamp="1592561148974" />
+  </component>
+</project>

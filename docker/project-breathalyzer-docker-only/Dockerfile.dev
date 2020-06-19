@@ -1,0 +1,7 @@
+FROM node:slim
+
+WORKDIR /opt/app
+COPY ./frontend/package.json .
+RUN yarn install
+COPY ./frontend .
+CMD ["yarn", "start"]
