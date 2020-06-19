@@ -1,103 +1,86 @@
-const express = require('express');
-const redis = require('redis');
-const process = require('process');
+const keys = require('./keys');
+
+const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const keys = require('./keys.js');
 
-const app = express();
+const app = express()
 app.use(cors());
 app.use(bodyParser.json());
 
 console.log(keys);
 
-const {Pool} = require('pg');
+// postgres client setup
+const { Pool } = require('pg');
 const pgClient = new Pool({
-    user: keys.pgUser,
     host: keys.pgHost,
-    database: keys.pgDatabase,
+    port: keys.pgPort,
+    user: keys.pgUser,
     password: keys.pgPassword,
-    port: keys.pgPort
+    database: keys.pgDatabase
 });
-pgClient.on('error', () => console.log('Lost PG connection'));
 
-pgClient
-    .query('CREATE TABLE IF NOT EXISTS cache (number INT)')
-    .catch(err => console.log(err));
+setTimeout(() => {
+    pgClient
+        .query('CREATE TABLE IF NOT EXISTS exchange(nok NUMERIC, pln NUMERIC)')
+        .catch(err => console.log(err));
+}, 3000);
 
-//const redis = require('redis');
-//const redis = require('redis');
+const redis = require('redis');
 const redisClient = redis.createClient({
-  host: keys.redisHost,
-  port: keys.redisPort,
+    host: keys.redisHost,
+    port: keys.redisPort,
     retry_strategy: () => 1000
 });
 
-const port = 5000;
-app.listen(port, err => {
-    console.log(`Listening on port ${port}`);
+app.get('/', (req, res) => {
+    res.send("Howdy stranger!");
 });
 
-//create input for weight
-var weight = 0;
+app.get('/exchange/:nok', (req, res) => {
+    const nokKey = req.params.nok
+    const nok = parseFloat(nokKey)
 
-//beer alcohol content
-var beerAlcoholContent = .54;
+    var result = 0
 
-//wine alcohol content
-var wineAlcoholContent = .6;
+    redisClient.get(nokKey, (err, calculatedPln) => {
+        if (!calculatedPln) {
+            result = calculatePln(nok);
+            saveResultInDb(nok, result);
+            redisClient.set(nokKey, result.toString());
+        } else {
+            result = calculatedPln;
+        }
 
-//shot alcohol content
-var shotAlcoholContent = .6;
+        res.send(result.toString());
+    });
+});
 
-//average absortion rate
-var absortion = 7.5;
+app.get('/history', (req, res) => {
+    pgClient.query('SELECT * FROM exchange;', (err, result) => {
+        if (result.rows) {
+            res.send(result.rows);
+        } else {
+            res.send([]);
+        }
+    });
+});
 
-//per hour since last drink
-var timePass = 0.015;
+const nokExchangeRate = 0.41;
 
-function bac(beer, shot, wine, weight, time) {
-
-    var drinkTotal = ((beer * beerAlcoholContent) + (wine * wineAlcoholContent) + (shot * shotAlcoholContent));
-    var total = (drinkTotal * absortion);
-    var result = ((total) / (weight) - (time * timePass));
-    return result;
+function calculatePln(nok) {
+    return (nok * nokExchangeRate).toFixed(2);
 }
 
-app.get('/:beer/:shot/:wine/:weight/:time', async (req, res) => {
-    // add to db
+function saveResultInDb(nok, result) {
+    pgClient
+        .query(`INSERT INTO exchange (nok, pln) VALUES (${nok}, ${result})`)
+        .catch(pgError => console.log(pgError));
+}
 
-    var beer = parseInt(req.params.beer);
-    var shot = parseInt(req.params.shot);
-    var wine = parseInt(req.params.wine);
-    var weight = parseInt(req.params.weight);
-    var time = parseInt(req.params.time);
-    var ret = (bac(beer, shot, wine, weight, time));
-
-    await pgClient.query(`INSERT INTO cache VALUES (${ret})`);
-
-    // add to db re
-    res.send(`${ret} ‰`);
-});
+const appPort = 5000;
 
 
-app.get('/:status/', async (req, res) => {
-
-    const result = await pgClient.query('CREATE TABLE IF NOT EXISTS cache (number FLOAT)');
-    const result2 = await pgClient.query('SELECT * FROM cache');
-    //const result = await pgClient.query('SELECT * FROM values');
-    //res.send({gcd: result.rows});
-    res.send({gcd: result2.rows});
-});
-
-app.get('/droptable/', (req, res) => {
-    //console.log(res.send('XD'));
-    res.send('XD')
-
-
-});
-
-app.get('/results', async (req, res) => {
-
-});
-
+app.listen(appPort, err => {
+    console.log(`Backend app listening on port ${appPort}`);
+})

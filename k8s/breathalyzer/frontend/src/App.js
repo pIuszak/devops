@@ -1,75 +1,56 @@
-import React, { Component } from 'react';
+import React from 'react';
 import axios from 'axios';
-import logo from './logo.svg';
-import './App.css';
 
-class App extends Component
-{
-    constructor()
-    {
-        super()
-        this.handleClickHello = this.handleClickHello.bind(this)
-        this.handleClickCache = this.handleClickCache.bind(this)
-    }
+class App extends React.Component {
 
-    async
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          nok: 0,
+          pln: 0,
+          history: []
+        };
+      }
 
-    async handleClickCache ()
-    {
-        var xd = 1;
-        await axios.get(`/api/${xd}`).then(response =>
-        {
-            console.log(response.data);
-           // document.getElementById("result").value = response.data.toString();
+      onCalculateClicked = async () => {
+        const response = await axios.get(`/api/exchange/${this.state.nok}`);
+        this.setState({ pln: response.data });
+      };
+      
+      onNokValueChanged = (event) => {
+        this.setState({ nok: event.target.value });
+      };
+    
+      onUpdateHistoryClicked = async () => {
+        const response = await axios.get(`/api/history`);
+        this.setState({ history: response.data });
+      };
 
-        })
-    }
-
-    async handleClickHello ()
-    {
-        var beer = document.getElementById("beer").value;
-        var shot = document.getElementById("shot").value;
-        var wine = document.getElementById("wine").value;
-        var weight = document.getElementById("weight").value;
-        var time = document.getElementById("time").value;
-
-        await axios.get(`/api/${beer}/${shot}/${wine}/${weight}/${time}`).then(response =>
-        {
-            console.log(response);
-            document.getElementById("result").value = response.data.toString();
-
-        })
-    }
-
-    render() {
-
+      render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    <p>Breathalyzer by pluszak</p>
+            <div>
 
-                    <img src={logo} className="App-logo" alt="logo" />
+                <div>
+                    <p>NOK: </p>
+                    <input type="number" value={this.state.nok} onChange={this.onNokValueChanged}/>
+                    <p>PLN:</p>
+                    <p>{this.state.pln}</p>
+                    <button onClick={this.onCalculateClicked}>XDDDDDD</button>
+                </div>
+                <div>
+                    <p>History</p>
+                    <button onClick={this.onUpdateHistoryClicked}>Update</button>
+                    { this.state.history.map((item, i) => <p key={i}>NOK: {item["nok"]}, PLN: {item["pln"]}</p>) }
+                    
+                </div>
 
-                    <input type="text" id="beer" placeholder="Ile piw wypiłeś..."></input>
-                    <input type="text" id="shot" placeholder="Ile szotów wypiłeś..."></input>
-                    <input type="text" id="wine" placeholder="Ile kieliszków wina wypiłeś..."></input>
-                    <input type="text" id="weight" placeholder="Ile ważysz..."></input>
-                    <input type="text" id="time" placeholder="Ile godzin temu przestałeś pić.."></input>
-                    <div>
-                        <button onClick={this.handleClickHello}> ILE MAM PROMILI  </button>
-
-                        <p>Szacowany poziom alkoholu we krwi :</p>
-
-                    </div>
-                    <input type="text" id="result" placeholder="wynik"></input>
-                    <p>Developer mode (open console):</p>
-                    <button onClick={this.handleClickCache}> SHOW CACHE </button>
-
-                </header>
             </div>
-        );
-    }
+        )
+
+
+      }
+
 }
 
 export default App;
-
