@@ -1,9 +1,9 @@
 const keys = require('./keys');
-
+const redis = require('redis');
 const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
+const { Pool } = require('pg');
 const app = express()
 app.use(cors());
 app.use(bodyParser.json());
@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 console.log(keys);
 
 // postgres client setup
-const { Pool } = require('pg');
+
 const pgClient = new Pool({
     host: keys.pgHost,
     port: keys.pgPort,
@@ -22,42 +22,102 @@ const pgClient = new Pool({
 
 setTimeout(() => {
     pgClient
-        .query('CREATE TABLE IF NOT EXISTS exchange(nok NUMERIC, pln NUMERIC)')
+        .query('CREATE TABLE IF NOT EXISTS cache(beer FLOAT, prom FLOAT)')
         .catch(err => console.log(err));
 }, 3000);
 
-const redis = require('redis');
+
 const redisClient = redis.createClient({
     host: keys.redisHost,
     port: keys.redisPort,
     retry_strategy: () => 1000
 });
 
-app.get('/', (req, res) => {
-    res.send("Howdy stranger!");
-});
+//create input for weight
+var weight = 0;
 
-app.get('/exchange/:nok', (req, res) => {
-    const nokKey = req.params.nok
-    const nok = parseFloat(nokKey)
+//beer alcohol content
+var beerAlcoholContent = .54;
 
-    var result = 0
+//wine alcohol content
+var wineAlcoholContent = .6;
 
-    redisClient.get(nokKey, (err, calculatedPln) => {
-        if (!calculatedPln) {
-            result = calculatePln(nok);
-            saveResultInDb(nok, result);
-            redisClient.set(nokKey, result.toString());
+//shot alcohol content
+var shotAlcoholContent = .6;
+
+//average absortion rate
+var absortion = 7.5;
+
+//per hour since last drink
+var timePass = 0.015;
+var time = 0.015;
+var weight = 85;
+
+function bac(beer) {
+
+    var drinkTotal = ((beer * beerAlcoholContent));
+    var total = (drinkTotal * absortion);
+    var result = ((total) / (weight) - (time * timePass));
+    return result;
+}
+
+
+app.get('/bac/:beer', async (req, res) => {
+
+    const beer = req.params.beer
+    const prom = parseFloat(beer)
+
+    var out = 0;
+   //
+
+   //  pgClient.query(`SELECT * FROM cache WHERE beer = ${prom}`, (err, result) => {
+   //          if (result.rows) {
+   //              res.send(parseFloat(result.rows[0]["prom"].toString()));
+   //          } else {
+   //              result = bac(prom);
+   //              saveResultInDb(prom, result);
+   //              res.send(`${result} ‰`);
+   //          }
+   //      }
+   //  ).catch(pgError => console.log(pgError));
+
+    //  pgClient
+    //      .query('CREATE TABLE IF NOT EXISTS cache(beer FLOAT, prom FLOAT)')
+    //      .catch(err => console.log(err));
+    //
+    //  pgClient.query(`SELECT * FROM cache WHERE beer = ${prom}`, (err, result) => {
+    //          if (result.rows) {
+    //             // res.send(parseFloat(result.rows[0]["prom"].toString()));
+    //          } else {
+    //              // result = bac(prom);
+    //              // saveResultInDb(prom, result);
+    //              // res.send(`${result} ‰`);
+    //          }
+    //      }
+    //  ).catch(pgError => console.log(pgError));
+    //
+    // out = bac(prom);
+    // saveResultInDb(prom, out);
+    // res.send(`${out} ‰`);
+    //
+
+
+    redisClient.get(beer, (err, alreadyComputed) => {
+        if (!alreadyComputed) {
+            out = bac(prom);
+            saveResultInDb(prom, out);
+            redisClient.set(beer, out.toString());
         } else {
-            result = calculatedPln;
+            out = "(C)"+alreadyComputed;
         }
 
-        res.send(result.toString());
+        res.send(`${out} ‰`);
     });
 });
 
-app.get('/history', (req, res) => {
-    pgClient.query('SELECT * FROM exchange;', (err, result) => {
+app.get('/:status/', async (req, res) => {
+
+    pgClient.query('SELECT * FROM cache;', (err, result) => {
         if (result.rows) {
             res.send(result.rows);
         } else {
@@ -66,15 +126,32 @@ app.get('/history', (req, res) => {
     });
 });
 
-const nokExchangeRate = 0.41;
 
-function calculatePln(nok) {
-    return (nok * nokExchangeRate).toFixed(2);
+app.get('/:beer/:debug', async (req, res) => {
+    const nokKey = req.params.beer
+    const beeer = parseFloat(nokKey)
+    res.send(`${isInDb(beeer)} from cache`);
+
+});
+
+function isInDb(b) {
+     pgClient.query(`SELECT * FROM cache WHERE beer = ${b}`, (err, result) => {
+             if (result.rows) {
+                res.send(parseFloat(result.rows[0]["prom"].toString()));
+             } else {
+                 result = bac(beeer);
+                 saveResultInDb(beeer, result);
+                 res.send(`${result} ‰`);
+             }
+         }
+     ).catch(pgError => console.log(pgError));
 }
 
-function saveResultInDb(nok, result) {
+function saveResultInDb(beer, prom) {
+
+    pgClient.query('CREATE TABLE IF NOT EXISTS cache(beer FLOAT, prom FLOAT)');
     pgClient
-        .query(`INSERT INTO exchange (nok, pln) VALUES (${nok}, ${result})`)
+        .query(`INSERT INTO cache (beer, prom) VALUES (${beer}, ${prom})`)
         .catch(pgError => console.log(pgError));
 }
 

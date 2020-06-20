@@ -12,7 +12,7 @@ class App extends Component
         this.handleClickCache = this.handleClickCache.bind(this)
     }
 
-    async
+
 
     async handleClickCache ()
     {
@@ -25,21 +25,39 @@ class App extends Component
         })
     }
 
+    async handleClickCacheDebug ()
+    {
+        var beer = document.getElementById("beer").value;
+        await axios.get(`/api/${beer}/${beer}`).then(response =>
+        {
+            console.log(response.data);
+            document.getElementById("result").value = response.data.toString();
+
+        })
+    }
+
     async handleClickHello ()
     {
         var beer = document.getElementById("beer").value;
-        var shot = document.getElementById("shot").value;
-        var wine = document.getElementById("wine").value;
-        var weight = document.getElementById("weight").value;
-        var time = document.getElementById("time").value;
 
-        await axios.get(`/api/${beer}/${shot}/${wine}/${weight}/${time}`).then(response =>
+        await axios.get(`/api/bac/${beer}`).then(response =>
         {
             console.log(response);
             document.getElementById("result").value = response.data.toString();
 
         })
     }
+
+    onCalculateClicked = async () => {
+        var beer = document.getElementById("beer").value;
+        // var shot = document.getElementById("shot").value;
+        // var wine = document.getElementById("wine").value;
+        // var weight = document.getElementById("weight").value;
+        // var time = document.getElementById("time").value;
+        const response = await axios.get(`/api/bac/${beer}`);
+        console.log(response);
+        document.getElementById("result").value = response.data.toString();
+    };
 
     render() {
 
@@ -51,12 +69,13 @@ class App extends Component
         <img src={logo} className="App-logo" alt="logo" />
 
             <input type="text" id="beer" placeholder="Ile piw wypiłeś..."></input>
-            <input type="text" id="shot" placeholder="Ile szotów wypiłeś..."></input>
-            <input type="text" id="wine" placeholder="Ile kieliszków wina wypiłeś..."></input>
-            <input type="text" id="weight" placeholder="Ile ważysz..."></input>
-            <input type="text" id="time" placeholder="Ile godzin temu przestałeś pić.."></input>
+            {/*<input type="text" id="shot" placeholder="Ile szotów wypiłeś..."></input>*/}
+            {/*<input type="text" id="wine" placeholder="Ile kieliszków wina wypiłeś..."></input>*/}
+            {/*<input type="text" id="weight" placeholder="Ile ważysz..."></input>*/}
+            {/*<input type="text" id="time" placeholder="Ile godzin temu przestałeś pić.."></input>*/}
             <div>
-            <button onClick={this.handleClickHello}> ILE MAM PROMILI  </button>
+
+                <button onClick={this.handleClickHello}>Calculate</button>
 
         <p>Szacowany poziom alkoholu we krwi :</p>
 
@@ -64,6 +83,7 @@ class App extends Component
         <input type="text" id="result" placeholder="wynik"></input>
             <p>Developer mode (open console):</p>
         <button onClick={this.handleClickCache}> SHOW CACHE </button>
+        <button onClick={this.handleClickCacheDebug}> Debug </button>
 
         </header>
         </div>

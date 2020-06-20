@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: my-frontend-container
-          image: pluszak95/kube-frontend
+          image: pluszak95/final-frontend
           envFrom:
             - configMapRef:
                 name: myapp-config

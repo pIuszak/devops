@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: my-backend-container
-          image: pluszak95/breathalyzer-backend
+          image: pluszak95/final-backend
           envFrom:
             - configMapRef:
                 name: myapp-config
