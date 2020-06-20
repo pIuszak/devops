@@ -1,10 +1,14 @@
 ## Docker notes
 
 ```
+
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+docker container stop f944
+
 export DOCKER_HOST="tcp://192.168.64.2:2376"
 
 docker image ls
-
 docker container run <dockerhubid/name>
 
 docker container run -p 8080:80 -d pluszak95/final-backend
