@@ -51,7 +51,7 @@ var absortion = 7.5;
 //per hour since last drink
 var timePass = 0.015;
 var time = 0.015;
-var weight = 85;
+var weight = 75;
 
 function bac(beer) {
 
@@ -68,39 +68,6 @@ app.get('/bac/:beer', async (req, res) => {
     const prom = parseFloat(beer)
 
     var out = 0;
-   //
-
-   //  pgClient.query(`SELECT * FROM cache WHERE beer = ${prom}`, (err, result) => {
-   //          if (result.rows) {
-   //              res.send(parseFloat(result.rows[0]["prom"].toString()));
-   //          } else {
-   //              result = bac(prom);
-   //              saveResultInDb(prom, result);
-   //              res.send(`${result} ‰`);
-   //          }
-   //      }
-   //  ).catch(pgError => console.log(pgError));
-
-    //  pgClient
-    //      .query('CREATE TABLE IF NOT EXISTS cache(beer FLOAT, prom FLOAT)')
-    //      .catch(err => console.log(err));
-    //
-    //  pgClient.query(`SELECT * FROM cache WHERE beer = ${prom}`, (err, result) => {
-    //          if (result.rows) {
-    //             // res.send(parseFloat(result.rows[0]["prom"].toString()));
-    //          } else {
-    //              // result = bac(prom);
-    //              // saveResultInDb(prom, result);
-    //              // res.send(`${result} ‰`);
-    //          }
-    //      }
-    //  ).catch(pgError => console.log(pgError));
-    //
-    // out = bac(prom);
-    // saveResultInDb(prom, out);
-    // res.send(`${out} ‰`);
-    //
-
 
     redisClient.get(beer, (err, alreadyComputed) => {
         if (!alreadyComputed) {
